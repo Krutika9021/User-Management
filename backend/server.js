@@ -6,7 +6,8 @@ require('dotenv').config(); // Load .env before using process.env
 const userRoutes = require('./routes/userRoutes'); // Your routes file (corrected)
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
 
 // Middleware
 app.use(cors({
