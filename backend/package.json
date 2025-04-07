@@ -4,7 +4,8 @@
   "description": "User management backend using Express and MongoDB",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "npm install"
   },
   "author": "Krutika Salve",
   "license": "ISC",

@@ -18,10 +18,21 @@ app.use(cors({
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('🎉 Backend is live! Try accessing /api/users');
+const User = require("./models/User");
+
+app.get("/api/get-all-users", async (req, res) => {
+  try {
+    const users = await User.find(); // assuming Mongoose is used
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
 });
 
+// 🔁 Optional Health Route for testing
+app.get("/api/health", (req, res) => {
+  res.json({ status: "Backend running ✅" });
+});
 
 // Debug: print your MONGO_URI
 console.log("MONGO_URI is:", process.env.MONGO_URI);

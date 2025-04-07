@@ -2,14 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Replace this with your live backend URL
+const BASE_URL = "https://user-management-backend-ottb.onrender.com/api/users";
+
 function App() {
   const [formData, setFormData] = useState({ name: "", email: "", age: "" });
   const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
 
   const fetchUsers = async () => {
-    const res = await axios.get("http://localhost:5000/api/users");
-    setUsers(res.data);
+    try {
+      const res = await axios.get(BASE_URL);
+      setUsers(res.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   };
 
   useEffect(() => {
@@ -23,14 +30,18 @@ function App() {
       return;
     }
 
-    if (editId) {
-      await axios.put(`http://localhost:5000/api/users/${editId}`, formData);
-      setEditId(null);
-    } else {
-      await axios.post("http://localhost:5000/api/users", formData);
+    try {
+      if (editId) {
+        await axios.put(`${BASE_URL}/${editId}`, formData);
+        setEditId(null);
+      } else {
+        await axios.post(BASE_URL, formData);
+      }
+      setFormData({ name: "", email: "", age: "" });
+      fetchUsers();
+    } catch (error) {
+      console.error("Error saving user:", error);
     }
-    setFormData({ name: "", email: "", age: "" });
-    fetchUsers();
   };
 
   const handleEdit = (user) => {
@@ -39,8 +50,12 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/users/${id}`);
-    fetchUsers();
+    try {
+      await axios.delete(`${BASE_URL}/${id}`);
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   return (
